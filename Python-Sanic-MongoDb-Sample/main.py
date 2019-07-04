@@ -4,7 +4,7 @@
 from sanic import Sanic, Blueprint
 from sanic.response import text
 
-from sanic_limiter import Limiter, get_remote_address
+from sanic_limiter import Limiter, RateLimitExceeded, get_remote_address
 
 from sanic import Sanic
 from sanic.response import redirect
@@ -13,7 +13,6 @@ from sanic_motor import BaseModel
 
 app = Sanic(__name__)
 limiter = Limiter(app, global_limits=['5 per minute'], key_func=get_remote_address)
-
 settings = dict(MOTOR_URI='mongodb://localhost:27017/main',
                 LOGO=None,
                 )
@@ -87,6 +86,12 @@ async def destroy(request, id):
     await user.destroy()
     request['flash']('User was deleted successfully', 'success')
     return redirect(app.url_for('index'))
+
+@app.exception(RateLimitExceeded)
+@limiter.exempt
+async def handle_429(request, exception):
+    return jinja.render('error.html', request)
+    # return text("you are limitted, please wait for 1 minutes!")
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8000, debug=True)
