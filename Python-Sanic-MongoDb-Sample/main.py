@@ -27,7 +27,6 @@ class User(BaseModel):
     __unique_fields__ = ['name']
 
 @app.route("/")
-@limiter.limit("5/minute")
 async def index(request):
     cur = await User.find(sort='name, age desc')
     return jinja.render('index.html', request, users=cur.objects)
