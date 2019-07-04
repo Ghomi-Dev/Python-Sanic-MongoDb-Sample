@@ -1,0 +1,5 @@
+limits>=1.2.1
+sanic>=0.4.0
+six>=1.4.1
+sanic-motor>=0.1.6
+sanic-jinja2
