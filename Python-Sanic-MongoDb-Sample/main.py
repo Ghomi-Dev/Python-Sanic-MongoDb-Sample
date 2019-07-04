@@ -13,8 +13,6 @@ from sanic_motor import BaseModel
 
 app = Sanic(__name__)
 limiter = Limiter(app, global_limits=['5 per minute'], key_func=get_remote_address)
-bp = Blueprint('main')
-limiter.limit("5 per minute")(bp)
 
 settings = dict(MOTOR_URI='mongodb://localhost:27017/main',
                 LOGO=None,
@@ -29,13 +27,11 @@ class User(BaseModel):
     __unique_fields__ = ['name']
 
 @app.route("/")
-# @bp.route("/")
 @limiter.limit("5/minute")
 async def index(request):
     cur = await User.find(sort='name, age desc')
     return jinja.render('index.html', request, users=cur.objects)
 
-# @bp.route('/new', methods=('GET', 'POST'))
 @app.route('/new', methods=('GET', 'POST'))
 async def new(request):
     if request.method == 'POST':
@@ -54,8 +50,6 @@ async def new(request):
 
     return jinja.render('form.html', request, user={})
 
-
-# @bp.route('/edit/<id>', methods=('GET', 'POST'))
 @app.route('/edit/<id>', methods=('GET', 'POST'))
 async def edit(request, id):
     user = await User.find_one(id)
@@ -84,8 +78,6 @@ async def edit(request, id):
 
     return jinja.render('form.html', request, user=user)
 
-
-# @bp.route('/destroy/<id>')
 @app.route('/destroy/<id>')
 async def destroy(request, id):
     user = await User.find_one(id)
@@ -97,10 +89,5 @@ async def destroy(request, id):
     request['flash']('User was deleted successfully', 'success')
     return redirect(app.url_for('index'))
 
-
-
-app.blueprint(bp)
-
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8000, debug=True)
-#app.run(host="0.0.0.0", port=5000, debug=True)
