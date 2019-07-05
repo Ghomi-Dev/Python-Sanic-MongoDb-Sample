@@ -15,6 +15,14 @@
 
 
 
+#### Functionalities :
+
+* Simple CRUD Functions based on Mongodb
+* Requests limit per user: 5 requests per minute
+* Dockerized web app
+
+
+
 ##### you can use docker-composer to use this repo hassle free
 
 
