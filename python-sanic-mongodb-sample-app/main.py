@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 from extensions import checkAge
 from sanic import Sanic, Blueprint
 from sanic_jinja2 import SanicJinja2
@@ -15,6 +14,8 @@ settings =  getMogodbConnection()
 app.config.update(settings)
 dataAccessFactory(app)
 jinja = SanicJinja2(app, autoescape=True)
+
+app.static('/favicon.ico', '/app/assets/images/favicon.ico', name='favicon.ico')
 
 @app.route("/")
 async def index(request):
