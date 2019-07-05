@@ -8,4 +8,4 @@ services:
       dockerfile: ./Dockerfile
     image: python-sanic-mongodb-sample-app
     ports:
-      - "8000:8000"
+      - "8082:8082"

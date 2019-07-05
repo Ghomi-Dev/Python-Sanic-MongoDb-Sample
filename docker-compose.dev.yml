@@ -22,29 +22,18 @@ services:
     volumes:
       - ./python-sanic-mongodb-sample-app:/app/
     ports:
-      - "8000:8000"
+      - "8082:8082"
     depends_on:
-      - mongodb
-    # networks:
-    #   - app-tier
-    tty: true
+      - mongodbx
+    links: 
+      - mongodbx
 
-  mongodb:
+  mongodbx:
     image: mongo:latest
     restart: always
+    command: --smallfiles --bind_ip_all --port 27017
+    # env_file: .env
     # environment:
-      # MONGO_INITDB_ROOT_USERNAME: root
-      # MONGO_INITDB_ROOT_PASSWORD: example
-      # - MONGODB_USERNAME=user
-      # - MONGODB_PASSWORD=password
-      # - MONGODB_DATABASE=app
-      # - MONGODB_ROOT_PASSWORD=root
-    # volumes:
-    #   - main:/data/main
-    #   - mongo-config:/data/configdb
-    # networks:
-    #   - app-tier
-
-  # volumes:
-  # main:
-  # mongo-config:
+    #   MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+    #   MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    #   MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}

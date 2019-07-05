@@ -13,7 +13,8 @@ from sanic_motor import BaseModel
 
 app = Sanic(__name__)
 limiter = Limiter(app, global_limits=['5 per minute'], key_func=get_remote_address)
-settings = dict(MOTOR_URI='mongodb://localhost:27017/main',
+# settings = dict(MOTOR_URI='mongodb://adminuser:securepassword@mongodbx:27017/main',
+settings = dict(MOTOR_URI='mongodb://mongodbx:27017/main',
                 LOGO=None,
                 )
 app.config.update(settings)
@@ -94,4 +95,4 @@ async def handle_429(request, exception):
     # return text("you are limitted, please wait for 1 minutes!")
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8000, debug=True)
+    app.run(host='0.0.0.0', port=8082, debug=True)
