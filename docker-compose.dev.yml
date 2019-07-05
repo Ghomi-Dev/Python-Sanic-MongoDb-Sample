@@ -1,0 +1,39 @@
+version: "2"
+
+# networks:
+#   app-tier:
+#     driver: bridge
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    image: python-sanic-mongodb-sample-app
+    environment:
+      - APP_HOST=127.0.0.1
+      # - APP_CONFIG_PATH=./config.py
+      # - MONGODB_USERNAME=user
+      # - MONGODB_PASSWORD=password
+      - MONGODB_HOST=mongodb
+      - MONGODB_DATABASE=main
+    volumes:
+      - ./python-sanic-mongodb-sample-app:/app/
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mongodbx
+    links: 
+      - mongodbx
+
+  mongodbx:
+    image: mongo:latest
+    restart: always
+    command: --smallfiles --bind_ip_all --port 27017
+    # env_file: .env
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+    #   MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    #   MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
